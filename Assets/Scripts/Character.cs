@@ -22,10 +22,12 @@ public class Character : MonoBehaviour
 
     public void ChooseBuilding(Building nextBuilding)
     {
+        if (currentBuilding != null) currentBuilding.UnRegisterPerson(this);
         currentBuilding = nextBuilding;
+        currentBuilding.RegisterPerson(this);
     }
 
-    public void getInfected()
+    public void GetInfected()
     {
         infected = true;
     }
