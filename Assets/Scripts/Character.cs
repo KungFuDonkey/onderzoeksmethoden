@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
+    Building Home;
+    bool infected;
+    Building currentBuilding;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +18,10 @@ public class Character : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void ChooseBuilding(Building nextBuilding)
+    {
+        currentBuilding = nextBuilding;
     }
 }
