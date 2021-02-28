@@ -5,6 +5,7 @@ using DataStructures.Generic.FastLists;
 
 public class GameManager : MonoBehaviour
 {
+    public System.Random random = new System.Random();
     public static GameManager instance;
     public UnsortedDistinctList<Building> buildings;
     UnsortedDistinctList<Character> characters;
@@ -26,17 +27,26 @@ public class GameManager : MonoBehaviour
         SetupCharacters();
 	}
 
-    float step = 4, STEP = 4;
+    float Movestep = 2, InfectStep = 4, STEP = 4;
     // Update is called once per frame
     void Update()
     {
-        step -= Time.deltaTime;
-        if(step < 0)
+        Movestep -= Time.deltaTime;
+        if(Movestep < 0)
 		{
-            step = STEP;
+            Movestep = STEP;
             for(int i = 0; i < characters.Count; i++)
 			{
-                //update characters
+                characters[i].ChooseBuilding(buildings[random.Next(buildings.Count)]);
+			}
+		}
+        InfectStep -= Time.deltaTime;
+        if(InfectStep < 0)
+		{
+            InfectStep = STEP;
+            for(int i = 0; i < buildings.Count; i++)
+			{
+                buildings[i].InfectPeople();
 			}
 		}
     }
