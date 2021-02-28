@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using DataStructures.Generic.FastLists;
@@ -6,10 +6,11 @@ using DataStructures.Generic.FastLists;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    UnsortedDistinctList<Building> buildings;
+    public UnsortedDistinctList<Building> buildings;
     UnsortedDistinctList<Character> characters;
-    // Start is called before the first frame update
     
+    // Start is called before the first frame update
+
 
     void Start()
     {
@@ -22,17 +23,50 @@ public class GameManager : MonoBehaviour
 
         buildings = new UnsortedDistinctList<Building>();
         characters = new UnsortedDistinctList<Character>();
-
+        SetupCharacters();
 	}
 
+    float step = 4, STEP = 4;
     // Update is called once per frame
     void Update()
     {
-        
+        step -= Time.deltaTime;
+        if(step < 0)
+		{
+            step = STEP;
+            for(int i = 0; i < characters.Count; i++)
+			{
+                //update characters
+			}
+		}
     }
+
+    public int characterAmount = 1000;
+    void SetupCharacters()
+	{
+        GameObject CharacterObject = Resources.Load<GameObject>("Prefabs/Character");
+        for (int i = 0; i < characterAmount; i++)
+		{
+            Instantiate(CharacterObject);
+		}
+	}
 
     public void RegisterBuilding(Building building)
 	{
         buildings.Add(building);
+	}
+
+    public void BeginSpread()
+	{
+
+	}
+
+    public void Restart()
+	{
+        for(int i = 0; i < characters.Count; i++)
+		{
+            Destroy(characters[i].gameObject);
+		}
+        SetupCharacters();
 	}
 }
