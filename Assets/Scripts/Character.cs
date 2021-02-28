@@ -5,7 +5,7 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
     Building Home;
-    bool infected;
+    bool infected = false;
     Building currentBuilding;
 
     // Start is called before the first frame update
@@ -23,5 +23,10 @@ public class Character : MonoBehaviour
     public void ChooseBuilding(Building nextBuilding)
     {
         currentBuilding = nextBuilding;
+    }
+
+    public void getInfected()
+    {
+        infected = true;
     }
 }
