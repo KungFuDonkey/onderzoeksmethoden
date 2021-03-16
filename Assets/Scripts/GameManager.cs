@@ -5,11 +5,14 @@ using DataStructures.Generic.FastLists;
 
 public class GameManager : MonoBehaviour
 {
-    public System.Random random = new System.Random();
     public static GameManager instance;
-    public UnsortedDistinctList<Building> buildings;
-    UnsortedDistinctList<Character> characters;
-    
+    public List<Building> buildings;
+    public List<Building> houses;
+    GraphManager graphManager;
+    List<Character> characters;
+
+    bool started = false;
+    int moveTurn = 0;
     // Start is called before the first frame update
 
 
@@ -22,42 +25,56 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        buildings = new UnsortedDistinctList<Building>();
-        characters = new UnsortedDistinctList<Character>();
+        GameObject gm = GameObject.Find("GraphManager");
+        graphManager = gm.GetComponent<GraphManager>();
+        gm.SetActive(false);
+
+        buildings = new List<Building>();
+        CreateStores();
+
+        houses = new List<Building>();
+        CreateHouses();
+
+        characters = new List<Character>();
         SetupCharacters();
 	}
 
-    float Movestep = 2, InfectStep = 4, STEP = 4;
+    float Movestep = 0, InfectStep = 2, STEP = 4;
     // Update is called once per frame
     void Update()
     {
         Movestep -= Time.deltaTime;
         if(Movestep < 0)
 		{
+            Move();
             Movestep = STEP;
-            for(int i = 0; i < characters.Count; i++)
-			{
-                characters[i].ChooseBuilding(buildings[random.Next(buildings.Count)]);
-			}
 		}
         InfectStep -= Time.deltaTime;
         if(InfectStep < 0)
 		{
+            if (started)
+            {
+				if (graphManager.AddState(characters))
+				{
+                    started = false;
+                    graphManager.gameObject.SetActive(true);
+                    Time.timeScale = 0;
+				}
+            }
+            Infect();
+            Heal();
             InfectStep = STEP;
-            for(int i = 0; i < buildings.Count; i++)
-			{
-                buildings[i].InfectPeople();
-			}
 		}
     }
-
-    public int characterAmount = 1000;
     void SetupCharacters()
 	{
         GameObject CharacterObject = Resources.Load<GameObject>("Prefabs/Character");
-        for (int i = 0; i < characterAmount; i++)
+        for (int i = 0; i < GameValues.instance.characterAmount; i++)
 		{
-            Instantiate(CharacterObject);
+            GameObject p = Instantiate(CharacterObject);
+            Character c = p.GetComponent<Character>();
+            c.Home = houses[GameValues.instance.random.Next(houses.Count)];
+            characters.Add(c);
 		}
 	}
 
@@ -68,7 +85,89 @@ public class GameManager : MonoBehaviour
 
     public void BeginSpread()
 	{
+        started = true;
+        characters[GameValues.instance.random.Next(characters.Count)].GetInfected();
+        Debug.Log("Start");
+	}
 
+    //not used yet
+    public void CreateHouses()
+	{
+        GameObject house = Resources.Load<GameObject>("Prefabs/House");
+        for(int x = 0; x < GameValues.instance.xhouses; x++)
+		{
+            for(int y = 0; y < GameValues.instance.yhouses; y++)
+			{
+                GameObject h = Instantiate(house, new Vector3(x * 15, 0, -(y + 1) * 15), Quaternion.identity, null);
+                Building b = h.GetComponent<Building>();
+                houses.Add(b);
+			}
+		}
+	}
+    public void CreateStores()
+	{
+        GameObject store = Resources.Load<GameObject>("Prefabs/Store");
+        for(int x = 0; x < GameValues.instance.xstores; x++)
+		{
+            for(int y = 0; y < GameValues.instance.ystores; y++)
+			{
+                GameObject s = Instantiate(store, new Vector3(x * 15, 0, y * 15), Quaternion.identity, null);
+                Building b = s.GetComponent<Building>();
+                buildings.Add(b);
+			}
+		}
+	}
+
+    void Move()
+	{
+        if(moveTurn > GameValues.instance.moveToHomeTurns){
+            Debug.Log("HOME");
+            moveTurn = 0;
+            for(int i = 0; i < characters.Count; i++)
+			{
+                characters[i].MoveHome();
+			}
+		}
+		else
+		{
+            Debug.Log("MOVE");
+            for (int i = 0; i < characters.Count; i++)
+            {
+                characters[i].ChooseBuilding(buildings[GameValues.instance.random.Next(buildings.Count)]);
+            }
+            moveTurn++;
+        }
+
+    }
+
+    void Infect()
+	{
+        if(moveTurn != 0)
+		{
+            Debug.Log("INFECT");
+            for (int i = 0; i < buildings.Count; i++)
+            {
+                buildings[i].InfectPeople();
+            }
+        }
+		else
+		{
+            for(int i = 0; i < houses.Count; i++)
+			{
+                houses[i].InfectPeople();
+			}
+		}
+
+
+    }
+
+    void Heal()
+	{
+        Debug.Log("HEAL");
+        for(int i = 0; i < characters.Count; i++)
+		{
+            characters[i].Heal();
+		}
 	}
 
     public void Restart()
@@ -77,6 +176,16 @@ public class GameManager : MonoBehaviour
 		{
             Destroy(characters[i].gameObject);
 		}
+        for(int i = 0; i < buildings.Count; i++)
+		{
+            buildings[i].Restart();
+		}
+        graphManager.Restart();
+        graphManager.gameObject.SetActive(false);
+        characters = new List<Character>();
         SetupCharacters();
+        Movestep = 0;
+        moveTurn = 0;
+        InfectStep = 2;
 	}
 }

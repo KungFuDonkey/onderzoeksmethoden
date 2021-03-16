@@ -6,15 +6,14 @@ using DataStructures.Generic.FastLists;
 public class Building : MonoBehaviour
 {
     UnsortedDistinctList<Character> people;
-    string name;
-    int size;
-    float ventilationGrade;
+
+    int size = 10;
+    float ventilationGrade = 1;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        GameManager.instance.RegisterBuilding(this);
         people = new UnsortedDistinctList<Character>();
     }
 
@@ -33,7 +32,7 @@ public class Building : MonoBehaviour
         float infectionChance = InfectionChance();
         for(int i = 0; i < people.Count; i++)
 		{
-            if(GameManager.instance.random.NextDouble() < infectionChance)
+            if(GameValues.instance.random.NextDouble() < infectionChance)
 			{
                 people[i].GetInfected();
 			}
@@ -42,6 +41,16 @@ public class Building : MonoBehaviour
 
     public float InfectionChance()
     {
-        return people.Count / size / ventilationGrade;
+        float infectedPeople = 0;
+        for(int i = 0; i < people.Count; i++)
+		{
+            infectedPeople += people[i].state == CharacterState.infected ? 1 : 0;
+		}
+        return infectedPeople / size;
     }
+
+	public void Restart()
+	{
+        people.Clear();
+	}
 }
