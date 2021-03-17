@@ -39,9 +39,13 @@ public class InputManager : MonoBehaviour
 		{
             GameManager.instance.Restart();
 		}
-        if (Input.GetKeyDown(KeyCode.G))
+		if (Input.GetKeyDown(KeyCode.G))
 		{
-            Time.timeScale = 100;
+			Time.timeScale = 100;
+		}
+		if (Input.GetKey(KeyCode.Z))
+		{
+            GameManager.instance.Stop();
 		}
     }
 

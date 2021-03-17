@@ -36,11 +36,16 @@ public class GraphManager : MonoBehaviour
 		state.Add((healthy, infected, immune));
 		if(infected == 0 && immune != 0)
 		{
-			DrawGraph();
-			WriteGraph();
+			Stop();
 			return true;
 		}
 		return false;
+	}
+
+	public void Stop()
+	{
+		DrawGraph();
+		WriteGraph();
 	}
 
 	void DrawGraph()

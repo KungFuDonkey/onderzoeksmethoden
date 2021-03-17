@@ -157,10 +157,11 @@ MonoBehaviour:
   xstores: 25
   ystores: 10
   infectTurns: 15
-  immuneTurns: 80
+  immuneTurns: 25
   characterAmount: 1000
   moveToHomeTurns: 5
   stayAtHome: 25
+  RZero: 1
   deathChancePercentage: 10
 --- !u!4 &49091571
 Transform:

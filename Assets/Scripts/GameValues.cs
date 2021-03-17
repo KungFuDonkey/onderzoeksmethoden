@@ -31,6 +31,7 @@ public class GameValues : MonoBehaviour
     public int characterAmount;
     public int moveToHomeTurns;
     public int stayAtHome;
+    public float RZero;
     [SerializeField]
     int deathChancePercentage;
     public int DeathChance

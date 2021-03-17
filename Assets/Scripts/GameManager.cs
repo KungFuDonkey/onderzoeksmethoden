@@ -142,26 +142,30 @@ public class GameManager : MonoBehaviour
 
     void Infect()
 	{
-        if(moveTurn != 0)
-		{
-            Debug.Log("INFECT");
-            for (int i = 0; i < buildings.Count; i++)
-            {
-                buildings[i].InfectPeople();
-            }
+        Debug.Log("INFECT");
+        for (int i = 0; i < buildings.Count; i++)
+        {
+            buildings[i].InfectPeople();
         }
-		else
+        for(int i = 0; i < houses.Count; i++)
 		{
-            for(int i = 0; i < houses.Count; i++)
-			{
-                houses[i].InfectPeople();
-			}
+            houses[i].InfectPeople();
 		}
+
 
 
     }
 
-    void Heal()
+	public void Stop()
+	{
+        Debug.Log("STOP");
+        graphManager.Stop();
+        started = false;
+        graphManager.gameObject.SetActive(true);
+        Time.timeScale = 0;
+    }
+
+	void Heal()
 	{
         Debug.Log("HEAL");
         for(int i = 0; i < characters.Count; i++)
@@ -179,6 +183,10 @@ public class GameManager : MonoBehaviour
         for(int i = 0; i < buildings.Count; i++)
 		{
             buildings[i].Restart();
+		}
+        for(int i = 0; i < houses.Count; i++)
+		{
+            houses[i].Restart();
 		}
         graphManager.Restart();
         graphManager.gameObject.SetActive(false);
