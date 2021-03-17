@@ -31,6 +31,8 @@ public class GameValues : MonoBehaviour
     public int characterAmount;
     public int moveToHomeTurns;
     public int stayAtHome;
+    public float totalInfections = 0;
+    public List<float> previousInfections = new List<float>(); 
     public float RZero;
     [SerializeField]
     int deathChancePercentage;

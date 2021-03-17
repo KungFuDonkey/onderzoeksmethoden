@@ -5,14 +5,13 @@ using System.IO;
 using System.IO.Pipes;
 using UnityEngine;
 using UnityEngine.UI;
-using ExcelWriterDll;
 
 public class GraphManager : MonoBehaviour
 {
-	List<(int, int, int)> state;
+	List<(int, int, int, float)> state;
 	List<Image> images;
 
-	public bool AddState(List<Character> characters)
+	public bool AddState(List<Character> characters, float r)
 	{
 		int healthy = 0;
 		int infected = 0;
@@ -32,8 +31,8 @@ public class GraphManager : MonoBehaviour
 				healthy++;
 			}
 		}
-		if (state == null) state = new List<(int, int, int)>();
-		state.Add((healthy, infected, immune));
+		if (state == null) state = new List<(int, int, int, float)>();
+		state.Add((healthy, infected, immune, r));
 		if(infected == 0 && immune != 0)
 		{
 			Stop();
@@ -107,7 +106,7 @@ public class GraphManager : MonoBehaviour
 					sw.AutoFlush = true;
 					for (int i = 0; i < state.Count; i++)
 					{
-						sw.WriteLine(string.Format("{0} {1} {2}", state[i].Item1, state[i].Item2, state[i].Item3));
+						sw.WriteLine(string.Format("{0} {1} {2} {3}" , state[i].Item1, state[i].Item2, state[i].Item3, state[i].Item4));
 					}
 				}
 			}

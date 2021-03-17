@@ -152,13 +152,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ffc26769d12b494385688711d70466d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xhouses: 25
-  yhouses: 14
-  xstores: 25
-  ystores: 10
-  infectTurns: 15
-  immuneTurns: 25
-  characterAmount: 1000
+  xhouses: 38
+  yhouses: 38
+  xstores: 20
+  ystores: 20
+  infectTurns: 70
+  immuneTurns: 280
+  characterAmount: 3594
   moveToHomeTurns: 5
   stayAtHome: 25
   RZero: 1

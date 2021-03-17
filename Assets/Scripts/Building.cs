@@ -46,7 +46,7 @@ public class Building : MonoBehaviour
 		{
             infectedPeople += people[i].state == CharacterState.infected ? 1 : 0;
 		}
-        return infectedPeople / size * GameValues.instance.RZero;
+        return infectedPeople / size;
     }
 
 	public void Restart()

@@ -68,6 +68,11 @@ public class Character : MonoBehaviour
             state = CharacterState.infected;
             mat.color = Color.red;
             infectedTurns = GameValues.instance.infectTurns;
+            GameValues.instance.totalInfections += 1;
+        }
+        else if(state == CharacterState.infected)
+        {
+            
         }
 
     }

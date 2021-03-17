@@ -10,9 +10,10 @@ public class GameManager : MonoBehaviour
     public List<Building> houses;
     GraphManager graphManager;
     List<Character> characters;
-
+    int turn = 0;
     bool started = false;
     int moveTurn = 0;
+    float rzero = 0;
     // Start is called before the first frame update
 
 
@@ -50,11 +51,18 @@ public class GameManager : MonoBehaviour
             Movestep = STEP;
 		}
         InfectStep -= Time.deltaTime;
-        if(InfectStep < 0)
+        GameValues.instance.previousInfections.Add(GameValues.instance.totalInfections);
+        if (turn - 14 >= 0)
+        {
+            rzero = (GameValues.instance.totalInfections / GameValues.instance.previousInfections[turn - 14]);
+            Debug.Log("r = " + rzero);
+        }
+        turn += 1;
+        if (InfectStep < 0)
 		{
             if (started)
             {
-				if (graphManager.AddState(characters))
+				if (graphManager.AddState(characters, rzero))
 				{
                     started = false;
                     graphManager.gameObject.SetActive(true);
@@ -64,7 +72,9 @@ public class GameManager : MonoBehaviour
             Infect();
             Heal();
             InfectStep = STEP;
-		}
+            
+
+        }
     }
     void SetupCharacters()
 	{
